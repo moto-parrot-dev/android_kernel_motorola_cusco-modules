@@ -14,3 +14,4 @@ ccflags-y += -DCONFIG_MOT_SM7435_AVATRN=1
 # Flags to pass into C preprocessor
 CONFIG_MOT_OIS_DW9784_ACTIVE_OIS := y
 ccflags-y += -DCONFIG_MOT_OIS_DW9784_ACTIVE_OIS=1
+ccflags-y += -DCONFIG_MOT_OIS_AFTER_SALES_SERVICE=1

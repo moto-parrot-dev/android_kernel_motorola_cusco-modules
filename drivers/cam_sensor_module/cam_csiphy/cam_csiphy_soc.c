@@ -15,6 +15,9 @@
 #ifdef CONFIG_MOT_SM7435_AVATRN
 #include "include/cam_csiphy_1_2_3_hwreg_custom.h"
 #endif
+#ifdef CONFIG_MOT_SM6450_CUSCO
+#include "include/cam_csiphy_1_2_3_hwreg_cusco.h"
+#endif
 #endif
 #include "include/cam_csiphy_1_2_5_hwreg.h"
 #include "include/cam_csiphy_2_0_hwreg.h"
@@ -417,7 +420,7 @@ int32_t cam_csiphy_parse_dt_info(struct platform_device *pdev,
 		csiphy_dev->clk_lane = 0;
 		csiphy_dev->ctrl_reg->data_rates_settings_table = &data_rate_delta_table_1_2_3;
 #ifdef CONFIG_MOT_CUSTOM_CTLE_PARAM
-#ifdef CONFIG_MOT_SM7435_AVATRN
+#if defined(CONFIG_MOT_SM7435_AVATRN) || defined(CONFIG_MOT_SM6450_CUSCO)
 		if (soc_info->index == 1) {
 			csiphy_dev->ctrl_reg->csiphy_3ph_reg = csiphy_3ph_v1_2_3_reg_custom;
 			csiphy_dev->ctrl_reg->data_rates_settings_table = &data_rate_delta_table_1_2_3_custom;

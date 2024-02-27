@@ -758,24 +758,26 @@ static int dp_ctrl_set_usb_redriver_eq(struct dp_ctrl_private *ctrl)
 	return 0;
 }
 
-const static char *monitor_balcklist [] = {
-	"P27h-30",
-	"P32p-30",
-	"Y27q-20"
-};
-
-static bool is_allow_downgrade(u8 *monitor_name)
+static bool is_allow_downgrade(u8 *monitor_name, int type_index)
 {
-	int i=0;
+	char *hub_monitor_blacklist[] = {"LEN T34w-20",NULL};
+	char *dp_monitor_blacklist[] = {"P27h-30","P32p-30","Y27q-20",NULL};
 	bool is_allow = false;
+	char **monitor_list;
 
-	while(i < sizeof(monitor_balcklist)/sizeof(char *)) {
-		if(strstr(monitor_name, monitor_balcklist[i]) != NULL) {
+	if(type_index == 0)
+		monitor_list = hub_monitor_blacklist;
+	else
+		monitor_list = dp_monitor_blacklist;
+
+	while(*monitor_list != NULL) {
+		DP_INFO("downgrade:value:%s\n", *monitor_list);
+		if(strstr(monitor_name, *monitor_list) != NULL){
 			is_allow = true;
-			DP_INFO("match the monitor name=%s\n", monitor_balcklist[i]);
+			DP_INFO("match the monitor name=%s\n", monitor_name);
 			break;
 		}
-		i++;
+		monitor_list++;
 	}
 
 	return is_allow;
@@ -812,8 +814,19 @@ static int dp_ctrl_link_setup(struct dp_ctrl_private *ctrl, bool shallow)
 
 	if (ctrl->parser->dp_downgrade &&
 		link_params->bw_code == DP_LINK_BW_8_1 &&
+		link_params->lane_count == 2 &&
+		is_allow_downgrade(ctrl->panel->edid_ctrl->monitor_name, 0)) {
+
+		ctrl->initial_bw_code = DP_LINK_BW_5_4;
+		dp_ctrl_link_rate_down_shift(ctrl);
+		downgrade = true;
+		DP_INFO("downgrade to DP_LINK_BW_5_4\n");
+	}
+
+	if (ctrl->parser->dp_downgrade &&
+		link_params->bw_code == DP_LINK_BW_8_1 &&
 		link_params->lane_count == 4 &&
-		is_allow_downgrade(ctrl->panel->edid_ctrl->monitor_name)) {
+		is_allow_downgrade(ctrl->panel->edid_ctrl->monitor_name, 1)) {
 
 		ctrl->initial_bw_code = DP_LINK_BW_5_4;
 		dp_ctrl_link_rate_down_shift(ctrl);

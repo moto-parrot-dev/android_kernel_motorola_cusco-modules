@@ -760,7 +760,7 @@ static int dp_ctrl_set_usb_redriver_eq(struct dp_ctrl_private *ctrl)
 
 static bool is_allow_downgrade(u8 *monitor_name, int type_index)
 {
-	char *hub_monitor_blacklist[] = {"LEN T34w-20",NULL};
+	char *hub_monitor_blacklist[] = {"LEN T34w-20","LG Ultra HD",NULL};
 	char *dp_monitor_blacklist[] = {"P27h-30","P32p-30","Y27q-20",NULL};
 	bool is_allow = false;
 	char **monitor_list;

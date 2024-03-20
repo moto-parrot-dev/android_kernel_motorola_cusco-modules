@@ -994,6 +994,11 @@ int cam_sensor_match_sub_device_id(struct cam_sensor_ctrl_t *s_ctrl)
 			s_ctrl->sub_device_addr_type,
 			s_ctrl->sub_device_data_type);
 
+#ifdef CONFIG_MOT_SM6450_CUSCO
+                sub_device_id = sub_device_id & 0x10;
+                s_ctrl->expected_sub_device_id = s_ctrl->expected_sub_device_id & 0x10;
+#endif
+
 		CAM_INFO(CAM_SENSOR, "Read sub device id: 0x%x expected sub device id 0x%x",
 			sub_device_id, s_ctrl->expected_sub_device_id);
 
